@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Global Electricity Cost Calculator with Tiered Pricing guide. Calculate monthly energy usage easily.">
+<title>Global Electricity Cost Calculator</title>
+<style>
+  :root {
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --bg-color: #f4f7f6;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --text-muted: #666666;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    --coffee-color: #FFDD00;
+  }
+
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
+  
+  /* Header */
+  header { background: var(--card-bg); box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+  .header-inner { max-width: 1200px; margin: 0 auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+  .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .nav-links button { background: none; border: none; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; margin-left: 15px; }
+  .nav-links button:hover { color: var(--primary-color); }
+
+  /* Layout */
+  .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 320px; gap: 30px; flex: 1; }
+  
+  /* Cards */
+  .card { background: var(--card-bg); border-radius: var(--border-radius); padding: 25px; box-shadow: var(--box-shadow); margin-bottom: 25px; border: 1px solid #eee; }
+  h2 { margin-top: 0; font-size: 1.3rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 20px; }
+  h3 { margin-top: 0; font-size: 1.1rem; color: #444; }
+
+  /* Inputs */
+  .input-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
+  .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
+  .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; box-sizing: border-box; }
+  .form-group input:focus { border-color: var(--primary-color); outline: none; }
+  
+  /* Buttons */
+  .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+  .btn-primary { background: var(--primary-color); color: white; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-delete { background: #ff4d4f; color: white; padding: 4px 10px; font-size: 0.8rem; width: auto; border-radius: 4px; cursor: pointer; border: none; }
+
+  /* Results */
+  .result-box { background: #2d3436; color: white; padding: 20px; border-radius: var(--border-radius); margin-top: 20px; text-align: right; }
+  .result-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 1rem; opacity: 0.9; }
+  .result-total { font-size: 1.8rem; font-weight: bold; color: #ffeaa7; margin-top: 10px; }
+  .disclaimer { font-size: 0.75rem; color: #aaa; margin-top: 10px; font-style: italic; }
+
+  /* Sidebar List */
+  .quick-list { list-style: none; padding: 0; margin: 0; max-height: 500px; overflow-y: auto; }
+  .quick-list li { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #f1f1f1; cursor: pointer; font-size: 0.95rem; }
+  .quick-list li:hover { background: #f0f8ff; color: var(--primary-color); }
+  .watt-badge { background: #eee; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; color: #666; }
+
+  /* Added Items List */
+  .added-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; animation: fadeIn 0.3s ease; }
+
+  /* Educational Section (Tiered Pricing) */
+  .edu-box { background: #e3f2fd; border-left: 5px solid #2196f3; padding: 20px; border-radius: 4px; margin-bottom: 25px; }
+  .edu-box h3 { color: #0d47a1; margin-bottom: 10px; }
+  .edu-box p { font-size: 0.95rem; color: #333; margin-bottom: 10px; }
+  
+  /* Board Styles */
+  .board-list { list-style: none; padding: 0; margin: 0; }
+  .board-item { border-bottom: 1px solid #eee; }
+  .board-title {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 10px; cursor: pointer; font-weight: 600; color: #333;
+  }
+  .board-title:hover { background-color: #f9f9f9; color: var(--primary-color); }
+  .board-content {
+    display: none; padding: 15px; background: #f8f9fa; color: #555; font-size: 0.95rem; line-height: 1.6; border-top: 1px dashed #ddd;
+  }
+  .board-item.active .board-content { display: block; }
+  .board-item.active .board-title { color: var(--primary-color); background: #f0f8ff; }
+  
+  /* Pagination */
+  .pagination { display: flex; justify-content: center; gap: 5px; margin-top: 20px; }
+  .page-btn { padding: 6px 12px; border: 1px solid #ddd; background: #fff; cursor: pointer; border-radius: 4px; font-size: 0.9rem; }
+  .page-btn:hover { background: #eee; }
+  .page-btn.active { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+  .page-btn:disabled { color: #ccc; cursor: not-allowed; }
+
+  /* Footer */
+  footer { background: #fff; border-top: 1px solid #eee; padding: 40px 0; margin-top: auto; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; }
+  .footer-left { font-size: 0.9rem; color: #666; }
+  .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; margin-right: 15px; }
+  .email-link { color: var(--primary-color); font-weight: bold; text-decoration: none; }
+  
+  .bmc-btn {
+    display: inline-flex; align-items: center; background-color: var(--coffee-color); 
+    color: #000; padding: 10px 20px; border-radius: 8px; font-weight: 700; 
+    text-decoration: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;
+    font-family: 'Cookie', cursive, sans-serif; letter-spacing: 0.5px;
+  }
+  .bmc-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 8px rgba(0,0,0,0.15); }
+  .bmc-btn img { height: 20px; margin-right: 8px; }
+
+  /* Modal */
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+  .modal-content { background: #fff; width: 90%; max-width: 600px; margin: 50px auto; padding: 30px; border-radius: 12px; max-height: 80vh; overflow-y: auto; position: relative; }
+  .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #999; }
+
+  @media (max-width: 768px) {
+    .container { grid-template-columns: 1fr; }
+    .header-inner, .footer-inner { flex-direction: column; text-align: center; gap: 15px; }
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">⚡ ElecCalc Pro</a>
+    <nav class="nav-links">
+      <button onclick="openModal('privacy')">Privacy Policy</button>
+      <button onclick="openModal('terms')">Terms of Use</button>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  
+  <!-- Left Main Content -->
+  <main>
+    <section class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h2 style="margin:0; border:none;" id="calcTitle">Electricity Cost Calculator</h2>
+        <div style="display:flex; gap:5px;">
+          <select id="countrySelect" style="padding:5px;"></select>
+          <select id="languageSelect" style="padding:5px;"></select>
+        </div>
+      </div>
+
+      <div class="input-grid">
+        <div class="form-group">
+          <label id="lbl_name">Appliance Name</label>
+          <input type="text" id="customName" placeholder="e.g. Gaming PC">
+        </div>
+        <div class="form-group">
+          <label id="lbl_power">Power (W)</label>
+          <input type="number" id="customPower" placeholder="Watts">
+        </div>
+        <div class="form-group">
+          <label id="lbl_hours">Hours/Day</label>
+          <input type="number" id="customHours" value="5" step="0.5">
+        </div>
+        <div class="form-group">
+          <label id="lbl_rate">Rate per kWh</label>
+          <input type="number" id="customRate" step="0.01">
+        </div>
+      </div>
+
+      <details style="margin-bottom:15px; font-size:0.9rem; color:#666;">
+        <summary id="lbl_advanced">Don't know Watts? Use Voltage & Amps</summary>
+        <div class="input-grid" style="margin-top:10px;">
+          <div class="form-group"><label>Voltage (V)</label><input type="number" id="customVoltage"></div>
+          <div class="form-group"><label>Current (A)</label><input type="number" id="customCurrent"></div>
+        </div>
+      </details>
+
+      <button id="addBtn" class="btn btn-primary">Add to List</button>
+    </section>
+
+    <!-- Results Section -->
+    <section class="card">
+      <h3 id="listTitle">Your Appliances</h3>
+      <div id="addedListContainer">
+        <p style="text-align:center; color:#999;" id="emptyMsg">No items added yet.</p>
+      </div>
+      
+      <div class="result-box">
+        <div class="result-row">
+          <span id="lbl_totalUsage">Total Monthly Usage</span>
+          <span id="val_totalUsage">0 kWh</span>
+        </div>
+        <div class="result-row">
+          <span id="lbl_estCost">Est. Monthly Cost</span>
+          <span id="val_totalCost" class="result-total">0</span>
+        </div>
+        <div class="disclaimer" id="disclaimerTxt">
+          * Actual cost may vary due to taxes, tiered pricing (progressive tax), and transmission fees.
+        </div>
+      </div>
+    </section>
+
+    <!-- Tiered Pricing Explanation -->
+    <section class="card edu-box">
+      <h3 id="eduTitle">📊 Understanding Tiered Pricing (Progressive Tax)</h3>
+      <p id="eduDesc1">Most countries use a "Tiered Pricing" system. This means the more electricity you use, the higher the rate per kWh becomes.</p>
+      <p id="eduDesc2"><strong>Example:</strong> The first 200 kWh might cost $0.10/kWh, but usage over 200 kWh might jump to $0.20/kWh. This calculator estimates based on a single average rate, so your actual bill could be higher if you exceed certain thresholds.</p>
+    </section>
+
+    <!-- Tips Board Section (20 items) -->
+    <section class="card">
+      <h2 id="boardTitle">💡 Energy Saving Knowledge Base</h2>
+      <ul id="boardList" class="board-list"></ul>
+      <div id="pagination" class="pagination"></div>
+    </section>
+  </main>
+
+  <!-- Right Sidebar -->
+  <aside>
+    <div class="card">
+      <h2 id="quickTitle">Quick Add</h2>
+      <p style="font-size:0.85rem; color:#666; margin-bottom:10px;" id="quickDesc">Click to auto-fill:</p>
+      <ul id="quickList" class="quick-list"></ul>
+    </div>
+  </aside>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      &copy; 2024 ElecCalc Pro. All rights reserved.<br>
+      Feedback: <a href="mailto:offthemain@proton.me" class="email-link">offthemain@proton.me</a>
+    </div>
+    
+    <div class="footer-links">
+      <a href="#" onclick="openModal('privacy'); return false;">Privacy Policy</a>
+      <a href="#" onclick="openModal('terms'); return false;">Terms of Use</a>
+    </div>
+
+    <a href="https://buymeacoffee.com/djawjdaks8g" target="_blank" class="bmc-btn">
+      <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee">
+      <span style="margin-left:5px">Buy me a coffee</span>
+    </a>
+  </div>
+</footer>
+
+<!-- Modals -->
+<div id="privacyModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeModal('privacy')">&times;</span>
+    <h2>Privacy Policy</h2>
+    <p>We respect your privacy. This website does not store any personal data on its servers. All calculations happen locally in your browser.</p>
+  </div>
+</div>
+<div id="termsModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeModal('terms')">&times;</span>
+    <h2>Terms of Use</h2>
+    <p>This calculator provides estimates only. Actual electricity bills may differ due to taxes, fixed charges, and tiered pricing systems.</p>
+  </div>
+</div>
+
+<script>
+// --- Data & Translations ---
+const translations = {
+  en: {
+    title: "Electricity Cost Calc",
+    lblName: "Appliance Name", lblPower: "Power (W)", lblHours: "Hours/Day", lblRate: "Rate per kWh",
+    lblAdvanced: "Don't know Watts? Use Voltage & Amps", addBtn: "Add to List",
+    listTitle: "Your Appliances", emptyMsg: "No items added yet.",
+    totalUsage: "Total Monthly Usage", estCost: "Est. Monthly Cost",
+    disclaimer: "* Actual cost may vary due to taxes, tiered pricing, and fees.",
+    quickTitle: "Quick Add (Avg)", quickDesc: "Click to auto-fill:",
+    boardTitle: "💡 Energy Saving Knowledge Base",
+    eduTitle: "📊 Understanding Tiered Pricing",
+    eduDesc1: "Most countries use a 'Tiered Pricing' system. This means the more electricity you use, the higher the rate per kWh becomes.",
+    eduDesc2: "Example: The first 200 kWh might cost lower, but usage over that limit jumps to a higher rate. This calculator uses a single average rate.",
+    applianceNames: {
+      aircon: "Air Conditioner", fridge: "Refrigerator", tv: "TV (LED)", washer: "Washing Machine", 
+      microwave: "Microwave", computer: "Desktop PC", monitor: "Monitor", gamingpc: "Gaming PC",
+      rice: "Rice Cooker", heater: "Electric Heater", hair: "Hair Dryer", airfryer: "Air Fryer",
+      dishwasher: "Dishwasher", led: "LED Bulb", laptop: "Laptop"
+    }
+  },
+  ko: {
+    title: "전기요금 계산기",
+    lblName: "가전제품 이름", lblPower: "소비전력 (W)", lblHours: "하루 사용 시간", lblRate: "kWh당 요금",
+    lblAdvanced: "고급: 전압(V) x 전류(A) 입력", addBtn: "목록에 추가",
+    listTitle: "추가된 제품 목록", emptyMsg: "목록이 비어있습니다.",
+    totalUsage: "총 월간 사용량", estCost: "월 예상 청구액",
+    disclaimer: "* 실제 요금은 세금 및 누진세 구간에 따라 차이가 있을 수 있습니다.",
+    quickTitle: "빠른 추가 (평균값)", quickDesc: "클릭하면 자동 입력됩니다:",
+    boardTitle: "💡 전기 절약 지식인",
+    eduTitle: "📊 누진세 이해하기",
+    eduDesc1: "대부분의 국가는 전기를 많이 쓸수록 요금이 비싸지는 '누진세'를 적용합니다.",
+    eduDesc2: "예: 처음 200kWh는 저렴하지만, 그 이상 사용 시 단가가 급격히 오릅니다. 이 계산기는 평균 단가로 계산하므로 실제보다 적게 나올 수 있음을 유의하세요.",
+    applianceNames: {
+      aircon: "에어컨", fridge: "냉장고", tv: "TV", washer: "세탁기", 
+      microwave: "전자레인지", computer: "데스크탑 PC", monitor: "모니터", gamingpc: "게이밍 PC",
+      rice: "전기밥솥", heater: "전기히터", hair: "헤어드라이어", airfryer: "에어프라이어",
+      dishwasher: "식기세척기", led: "LED 전구", laptop: "노트북"
+    }
+  }
+};
+
+const countryConfig = {
+  US: { lang:'en', currency:'USD', symbol:'$', rate:0.16, volt:120 },
+  KR: { lang:'ko', currency:'KRW', symbol:'₩', rate:280, volt:220 },
+  JP: { lang:'ja', currency:'JPY', symbol:'¥', rate:31, volt:100 }
+};
+
+const appliances = [
+  { key:'aircon', w:1800 }, { key:'fridge', w:150 }, { key:'tv', w:120 },
+  { key:'washer', w:500 }, { key:'dryer', w:3000 }, { key:'microwave', w:1000 },
+  { key:'gamingpc', w:450 }, { key:'computer', w:200 }, { key:'laptop', w:50 },
+  { key:'monitor', w:40 }, { key:'dishwasher', w:1800 }, { key:'rice', w:1000 },
+  { key:'heater', w:2000 }, { key:'hair', w:1600 }, { key:'led', w:10 }
+];
+
+// --- 20 Tips Data (English & Korean) ---
+const boardDataSrc = {
+  en: [
+    {t:"1. What is Phantom Power?", c:"Even when turned off, plugged-in devices consume power. Unplugging can save ~10% of your bill."},
+    {t:"2. Optimal AC Temperature", c:"Set your AC to 78°F (26°C). Every degree lower can increase costs by 6-8%."},
+    {t:"3. Fridge Efficiency", c:"Keep your fridge 60% full for air circulation, but pack your freezer full to retain cold."},
+    {t:"4. Dishwasher Economy", c:"Skip the heat-dry cycle. Open the door and let dishes air dry to save significant energy."},
+    {t:"5. Cold Water Wash", c:"90% of a washer's energy goes to heating water. Use cold cycles for daily loads."},
+    {t:"6. LED Bulbs", c:"Switching to LEDs uses 75% less energy than incandescent bulbs and they last 25x longer."},
+    {t:"7. Smart Strips", c:"Use smart power strips to cut power to devices (like TVs/Consoles) when they go into standby."},
+    {t:"8. Air Filters", c:"Clean AC/Heater filters monthly. Clogged filters force the system to work harder."},
+    {t:"9. Oven vs. Microwave", c:"Reheating small portions? The microwave uses 80% less energy than the oven."},
+    {t:"10. Computer Sleep Mode", c:"Set your PC to sleep after 10 mins of inactivity. Screensavers do not save energy."},
+    {t:"11. Laptops vs Desktops", c:"Laptops consume 80% less electricity than desktop computers on average."},
+    {t:"12. Air Dry Clothing", c:"Dryers are energy hogs. Air drying clothes on a rack is free and gentler on fabrics."},
+    {t:"13. Seal Windows", c:"Drafty windows waste heat/cooling. Use weather stripping or caulking to seal gaps."},
+    {t:"14. Kettle Water", c:"Only boil the amount of water you need. Boiling a full kettle for one cup wastes energy."},
+    {t:"15. Peak Hours", c:"Some plans charge more during peak hours (4-9 PM). Run heavy appliances in the morning."},
+    {t:"16. Unplug Chargers", c:"Phone chargers draw power even when not connected to the phone. Unplug them."},
+    {t:"17. Energy Star", c:"Look for Energy Star rated appliances. They are certified to be energy efficient."},
+    {t:"18. Solar Potential", c:"Consider small solar chargers for mobile devices to reduce grid dependency slightly."},
+    {t:"19. Monitor Brightness", c:"Lowering your monitor/TV brightness from 100% to 70% saves energy and eye strain."},
+    {t:"20. Ironing Hack", c:"Iron a large batch at once. The iron consumes the most power while heating up."}
+  ],
+  ko: [
+    {t:"1. 대기전력이란?", c:"플러그만 꽂아도 나가는 전기입니다. 사용 안 할 땐 뽑으면 10% 절약됩니다."},
+    {t:"2. 에어컨 적정온도", c:"26도가 적당합니다. 1도만 높여도 전기세가 많이 줄어듭니다."},
+    {t:"3. 냉장고 채우기", c:"냉장실은 60%만 채우고, 냉동실은 꽉 채우는 게 효율이 좋습니다."},
+    {t:"4. 찬물 세탁", c:"세탁기 전력의 90%는 물 데우는 데 씁니다. 찬물 코스를 이용하세요."},
+    {t:"5. LED 교체", c:"일반 전구보다 전기를 훨씬 적게 먹고 수명도 깁니다."},
+    {t:"6. 밥솥 보온 끄기", c:"전기밥솥 보온 기능이 전기를 많이 먹습니다. 밥은 얼려서 보관하세요."},
+    {t:"7. TV 밝기 조절", c:"화면 밝기를 조금만 줄여도 전력 소모가 줄어듭니다."},
+    {t:"8. 청소기 강도", c:"일반 먼지는 '중'으로도 충분합니다. 필터 청소를 자주 하세요."},
+    {t:"9. 멀티탭 활용", c:"스위치형 멀티탭을 사용해 대기전력을 한 번에 차단하세요."},
+    {t:"10. 컴퓨터 절전", c:"10분 이상 안 쓰면 절전모드로 가도록 설정하세요."},
+    {t:"11. 다림질 모아서", c:"다리미는 열 올릴 때 전기를 가장 많이 씁니다. 모아서 하세요."},
+    {t:"12. 전자레인지 활용", c:"에어프라이어보다 전자레인지가 전기를 덜 씁니다."},
+    {t:"13. 식기세척기 건조", c:"열풍 건조 대신 문을 열어 자연 건조하세요."},
+    {t:"14. 창문 단열", c:"뽁뽁이나 커튼으로 냉난방 효율을 높이세요."},
+    {t:"15. 누진세 확인", c:"자신의 집이 누진세 어느 구간인지 확인하는 게 중요합니다."},
+    {t:"16. 제습기 사용", c:"제습기도 전기를 꽤 씁니다. 방문 닫고 짧고 굵게 쓰세요."},
+    {t:"17. 전기포트 물 양", c:"필요한 만큼만 물을 넣고 끓이세요."},
+    {t:"18. 충전기 뽑기", c:"충전 다 되면 충전기를 콘센트에서 뽑으세요."},
+    {t:"19. 내복 입기", c:"겨울에 내복을 입으면 난방 온도를 3도 낮출 수 있습니다."},
+    {t:"20. 1등급 가전", c:"장기적으로는 1등급 제품이 전기요금에서 훨씬 이득입니다."}
+  ]
+};
+
+let state = { lang: 'en', currency: 'USD', items: [] };
+let currentPage = 1;
+const itemsPerPage = 5;
+
+const el = id => document.getElementById(id);
+
+function init() {
+  el('languageSelect').innerHTML = `<option value="en">English</option><option value="ko">한국어</option>`;
+  el('countrySelect').innerHTML = `<option value="US">🇺🇸 USA</option><option value="KR">🇰🇷 Korea</option><option value="JP">🇯🇵 Japan</option>`;
+  
+  el('countrySelect').onchange = e => setCountry(e.target.value);
+  el('languageSelect').onchange = e => setLang(e.target.value);
+  el('addBtn').onclick = addItem;
+  ['customVoltage','customCurrent'].forEach(id => {
+    el(id).addEventListener('input', () => {
+      const v = el('customVoltage').value, a = el('customCurrent').value;
+      if(v && a) el('customPower').value = (v*a).toFixed(0);
+    });
+  });
+
+  setCountry('US'); // Default US
+}
+
+function setCountry(code) {
+  const conf = countryConfig[code];
+  state.currency = conf.currency;
+  el('languageSelect').value = conf.lang;
+  el('customRate').value = conf.rate;
+  el('customVoltage').value = conf.volt;
+  setLang(conf.lang);
+}
+
+function setLang(lang) {
+  state.lang = lang;
+  const t = translations[lang] || translations['en'];
+  
+  el('calcTitle').textContent = t.title;
+  el('lbl_name').textContent = t.lblName;
+  el('lbl_power').textContent = t.lblPower;
+  el('lbl_hours').textContent = t.lblHours;
+  el('lbl_rate').textContent = t.lblRate;
+  el('lbl_advanced').textContent = t.lblAdvanced;
+  el('addBtn').textContent = t.addBtn;
+  el('listTitle').textContent = t.listTitle;
+  el('emptyMsg').textContent = t.emptyMsg;
+  el('lbl_totalUsage').textContent = t.totalUsage;
+  el('lbl_estCost').textContent = t.estCost;
+  el('disclaimerTxt').textContent = t.disclaimer;
+  el('quickTitle').textContent = t.quickTitle;
+  el('quickDesc').textContent = t.quickDesc;
+  el('boardTitle').textContent = t.boardTitle;
+  el('eduTitle').textContent = t.eduTitle;
+  el('eduDesc1').textContent = t.eduDesc1;
+  el('eduDesc2').textContent = t.eduDesc2;
+
+  renderQuickList();
+  renderItems();
+  renderBoard(1);
+  calculate();
+}
+
+function renderQuickList() {
+  const ul = el('quickList');
+  ul.innerHTML = '';
+  const t = translations[state.lang] || translations['en'];
+  appliances.forEach(app => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span>${t.applianceNames[app.key]||app.key}</span> <span class="watt-badge">${app.w}W</span>`;
+    li.onclick = () => {
+      el('customName').value = t.applianceNames[app.key]||app.key;
+      el('customPower').value = app.w;
+      el('customHours').focus();
+    };
+    ul.appendChild(li);
+  });
+}
+
+function addItem() {
+  const name = el('customName').value;
+  const power = parseFloat(el('customPower').value);
+  const hours = parseFloat(el('customHours').value) || 0;
+  const rate = parseFloat(el('customRate').value) || 0;
+  if(!name || !power) return alert(state.lang==='ko'?"이름과 전력을 입력하세요":"Please enter details");
+  
+  state.items.push({ id: Date.now(), name, power, hours, rate });
+  renderItems();
+  calculate();
+  el('customName').value = ''; el('customPower').value = '';
+}
+
+function renderItems() {
+  const container = el('addedListContainer');
+  if(state.items.length === 0) {
+    container.innerHTML = `<p style="text-align:center; color:#999;">${translations[state.lang].emptyMsg}</p>`;
+    return;
+  }
+  container.innerHTML = '';
+  state.items.forEach(item => {
+    const kwh = (item.power * item.hours * 30) / 1000;
+    const div = document.createElement('div');
+    div.className = 'added-item';
+    div.innerHTML = `
+      <div><strong>${item.name}</strong><br><small style="color:#666">${item.power}W × ${item.hours}h = ${kwh.toFixed(1)} kWh</small></div>
+      <button class="btn-delete" onclick="removeItem(${item.id})">Del</button>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function removeItem(id) {
+  state.items = state.items.filter(i => i.id !== id);
+  renderItems();
+  calculate();
+}
+
+function calculate() {
+  let totalKwh = 0, totalCost = 0;
+  state.items.forEach(i => {
+    const monthlyKwh = (i.power * i.hours * 30) / 1000;
+    totalKwh += monthlyKwh;
+    totalCost += monthlyKwh * i.rate;
+  });
+  el('val_totalUsage').textContent = `${totalKwh.toFixed(1)} kWh`;
+  el('val_totalCost').textContent = new Intl.NumberFormat(state.lang==='ko'?'ko-KR':'en-US', { style:'currency', currency: state.currency }).format(totalCost);
+}
+
+function renderBoard(page) {
+  currentPage = page;
+  const currentData = boardDataSrc[state.lang] || boardDataSrc['en'];
+  const start = (page - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const items = currentData.slice(start, end);
+  const totalPages = Math.ceil(currentData.length / itemsPerPage);
+
+  const ul = el('boardList');
+  ul.innerHTML = '';
+  items.forEach(item => {
+    const li = document.createElement('li');
+    li.className = 'board-item';
+    li.innerHTML = `<span class="board-title">${item.t} <span>▼</span></span><div class="board-content">${item.c}</div>`;
+    li.onclick = () => li.classList.toggle('active');
+    ul.appendChild(li);
+  });
+
+  const pDiv = el('pagination');
+  pDiv.innerHTML = '';
+  for(let i=1; i<=totalPages; i++){
+    const btn = document.createElement('button');
+    btn.innerText = i;
+    btn.className = `page-btn ${i===page?'active':''}`;
+    btn.onclick = () => renderBoard(i);
+    pDiv.appendChild(btn);
+  }
+}
+
+window.openModal = t => document.getElementById(t+'Modal').style.display='block';
+window.closeModal = t => document.getElementById(t+'Modal').style.display='none';
+window.onclick = e => { if(e.target.classList.contains('modal')) e.target.style.display="none"; }
+
+init();
+</script>
+</body>
+</html>
