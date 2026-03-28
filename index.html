@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="google-site-verification" content="C_c9aewf6GZ8YIWpkTSrQ2aQKzF5PlUhQt12-A06BIU" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="description" content="Calculate your global electricity costs and learn how to reduce your energy bill with our comprehensive guide and tiered pricing explanation.">
-<title>Global Electricity Cost Calculator & Energy Saving Guide</title>
+<meta name="description" content="Calculate your global electricity costs and learn how to reduce your energy bill. The best electric cost calculator for US, Europe, Asia, and Global.">
+<title>Electric Cost | Global Electricity Calculator</title>
 <style>
   :root {
     --primary-color: #007bff;
@@ -30,8 +29,9 @@
   /* Header */
   header { background: var(--card-bg); box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #eee; }
   .header-inner { max-width: 1200px; margin: 0 auto; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-  .logo { font-size: 1.3rem; font-weight: 800; color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 8px; }
-  .nav-links button { background: none; border: none; font-size: 0.9rem; color: var(--text-muted); cursor: pointer; margin-left: 10px; padding: 5px; font-weight: 600;}
+  .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .nav-links button { background: none; border: none; font-size: 0.95rem; color: var(--text-muted); cursor: pointer; margin-left: 15px; padding: 5px; font-weight: 600; transition: color 0.2s;}
+  .nav-links button:hover { color: var(--primary-color); }
 
   /* Layout */
   .container { max-width: 1200px; margin: 30px auto; padding: 0 15px; display: grid; grid-template-columns: 1fr 340px; gap: 25px; flex: 1; }
@@ -51,10 +51,14 @@
   .form-group input:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 3px rgba(0,123,255,0.15); }
   
   /* Buttons */
-  .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; touch-action: manipulation; }
+  .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
   .btn-primary { background: var(--primary-color); color: white; box-shadow: 0 4px 10px rgba(0,123,255,0.2); }
   .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
   .btn-delete { background: #ff4d4f; color: white; padding: 6px 12px; font-size: 0.85rem; width: auto; border-radius: 6px; }
+  
+  /* General Link Buttons */
+  .btn-outline { background: #fff; border: 2px solid var(--primary-color); color: var(--primary-color); display: inline-block; text-align: center; text-decoration: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; width: 100%; box-sizing: border-box; margin-bottom: 10px;}
+  .btn-outline:hover { background: var(--primary-color); color: #fff; }
 
   /* Results */
   .result-box { background: #1e293b; color: white; padding: 25px; border-radius: 12px; margin-top: 20px; text-align: right; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
@@ -69,29 +73,36 @@
   .quick-list li:hover { background: #f0f8ff; }
   .watt-badge { background: #e2e8f0; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; color: #475569; font-weight: 700; }
 
-  /* 🌟 SEO Article Section (AdSense Content) 🌟 */
-  .seo-article { background: transparent; box-shadow: none; border: none; padding: 0 10px; color: #334155; margin-top: 30px; }
+  /* Affiliate Box (NordVPN, NordPass) */
+  .affiliate-box { background: #f0fdf4; border-color: #bbf7d0; }
+  .affiliate-box h3 { color: #166534; }
+  .aff-link { display: block; padding: 15px; margin-bottom: 12px; border-radius: 8px; text-decoration: none; color: #1e293b; border: 1px solid #e2e8f0; background: #fff; transition: transform 0.2s, box-shadow 0.2s; }
+  .aff-link:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+  .aff-link strong { display: block; font-size: 1.1rem; color: var(--primary-color); margin-bottom: 4px; }
+  .aff-link p { margin: 0; font-size: 0.85rem; color: #475569; }
+
+  /* Native Ad Container */
+  .ad-container { margin: 25px 0; text-align: center; width: 100%; min-height: 100px; background: #fafafa; border-radius: 12px; display: flex; justify-content: center; align-items: center; overflow: hidden;}
+
+  /* SEO Article Section */
+  .seo-article { padding: 0 10px; color: #334155; margin-top: 30px; }
   .seo-article h2 { font-size: 1.8rem; border-bottom: none; margin-bottom: 20px; color: #0f172a; line-height: 1.3;}
-  .seo-article h3 { font-size: 1.3rem; margin-top: 35px; margin-bottom: 15px; color: #1e293b; display: flex; align-items: center; gap: 8px;}
+  .seo-article h3 { font-size: 1.3rem; margin-top: 35px; margin-bottom: 15px; color: #1e293b;}
   .seo-article p { margin-bottom: 18px; font-size: 1.05rem; line-height: 1.8; }
   .seo-article ul { margin-bottom: 25px; padding-left: 20px; }
   .seo-article li { margin-bottom: 12px; font-size: 1.05rem; }
-  .seo-article strong { color: #0f172a; background: #fff8e1; padding: 2px 4px; border-radius: 4px;}
-  .faq-box { background: #fff; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px; }
-  .faq-box h4 { margin: 0 0 10px 0; font-size: 1.1rem; color: #0f172a; }
-  .faq-box p { margin: 0; font-size: 0.95rem; color: #475569; }
 
   /* Footer */
   footer { background: #fff; border-top: 1px solid #eee; padding: 40px 0; margin-top: auto; }
   .footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; }
   .footer-left { font-size: 0.9rem; color: #64748b; }
-  .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; margin-right: 15px; font-weight: 500;}
+  .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; margin-right: 15px; font-weight: 500;}
   .bmc-btn { display: inline-flex; align-items: center; background-color: var(--coffee-color); color: #000; padding: 10px 18px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 0.95rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s;}
   .bmc-btn:hover { transform: translateY(-2px); }
   .bmc-btn img { height: 20px; margin-right: 8px; }
 
   /* Modal */
-  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 1000; backdrop-filter: blur(3px); }
+  .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); z-index: 1000; backdrop-filter: blur(4px); }
   .modal-content { background: #fff; width: 85%; max-width: 600px; margin: 8vh auto; padding: 30px; border-radius: 16px; max-height: 80vh; overflow-y: auto; position: relative; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
   .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; color: #94a3b8; padding: 5px; line-height: 1;}
 
@@ -100,7 +111,9 @@
     .container { grid-template-columns: 1fr; display: flex; flex-direction: column; }
     main { order: 1; }
     aside { order: 2; margin-top: -10px; margin-bottom: 20px; }
-    .header-inner { padding: 12px 15px; }
+    .header-inner { padding: 12px 15px; flex-wrap: wrap;}
+    .nav-links { margin-top: 10px; width: 100%; display: flex; justify-content: space-between;}
+    .nav-links button { margin-left: 0; }
     .input-grid { grid-template-columns: 1fr 1fr; }
     .footer-inner { flex-direction: column; text-align: center; gap: 15px; }
     .quick-list { max-height: 250px; }
@@ -114,10 +127,11 @@
 
 <header>
   <div class="header-inner">
-    <a href="#" class="logo">⚡ ElecCalc Pro</a>
+    <a href="#" class="logo">⚡ Electric Cost</a>
     <nav class="nav-links">
       <button onclick="openModal('privacy')">Privacy</button>
       <button onclick="openModal('terms')">Terms</button>
+      <button onclick="openModal('support')" style="color:var(--primary-color);">Support</button>
     </nav>
   </div>
 </header>
@@ -125,7 +139,6 @@
 <div class="container">
   
   <main>
-    <!-- Tool Section -->
     <section class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
         <h2 style="margin:0; border:none;" id="calcTitle">Electricity Cost Calculator</h2>
@@ -182,29 +195,47 @@
           <span id="val_totalCost" class="result-total">0.00</span>
         </div>
         <div class="disclaimer" id="disclaimerTxt">
-          * This is an estimate based on average flat rates. Your actual utility bill may differ due to taxes, transmission fees, and progressive (tiered) pricing brackets.
+          * Estimate based on average flat rates. Your actual bill may differ due to taxes and tiered pricing brackets.
         </div>
       </div>
     </section>
 
-    <!-- 🌟 SEO Rich Article Section (Injected by JS to switch languages) 🌟 -->
+    <!-- 📢 Adsterra Native Banner Ad -->
+    <div class="ad-container">
+      <script async="async" data-cfasync="false" src="https://pl28997156.profitablecpmratenetwork.com/fbf112b37c617e21ab08ac037ade72fb/invoke.js"></script>
+      <div id="container-fbf112b37c617e21ab08ac037ade72fb"></div>
+    </div>
+
+    <!-- SEO Rich Article Section -->
     <article id="seoContent" class="seo-article">
-      <!-- Content populated by JS -->
+      <!-- Injected by JS -->
     </article>
     
   </main>
 
   <!-- Sidebar -->
   <aside>
+    <!-- Quick Add -->
     <div class="card">
       <h2 id="quickTitle">⚡ Quick Add Appliances</h2>
       <p style="font-size:0.85rem; color:#64748b; margin-bottom:15px;" id="quickDesc">Tap any item to auto-fill the average wattage.</p>
       <ul id="quickList" class="quick-list"></ul>
     </div>
 
-    <!-- Ad placeholder (Do not add real ad code until approved) -->
-    <div class="card" style="background:#f1f5f9; border:1px dashed #cbd5e1; text-align:center; padding:40px 20px; color:#94a3b8;">
-      <p style="margin:0; font-size:0.9rem;">Sponsor Space</p>
+    <!-- 🛡️ Affiliate Partners Box (NordVPN / NordPass) -->
+    <div class="card affiliate-box">
+      <h3 id="affTitle">🛡️ Protect Your Digital Life</h3>
+      <p style="font-size:0.85rem; margin-bottom:15px; color:#166534;" id="affDesc">While saving energy at home, don't forget to secure your data online.</p>
+      
+      <a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=141918&url_id=23180" target="_blank" rel="noopener sponsored" class="aff-link">
+        <strong>NordVPN</strong>
+        <p id="nordVpnDesc">The best & fastest VPN to secure your internet connection globally.</p>
+      </a>
+      
+      <a href="https://go.nordpass.io/aff_c?offer_id=488&aff_id=141918&url_id=32566" target="_blank" rel="noopener sponsored" class="aff-link">
+        <strong>NordPass</strong>
+        <p id="nordPassDesc">Securely store, organize, and auto-fill your passwords anywhere.</p>
+      </a>
     </div>
   </aside>
 
@@ -213,40 +244,83 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-left">
-      &copy; 2024 ElecCalc Pro. All rights reserved.<br>
-      Contact & Feedback: <a href="mailto:offthemain@proton.me" style="color:var(--primary-color); font-weight:600; text-decoration:none;">offthemain@proton.me</a>
+      &copy; 2024 Electric Cost. All rights reserved.<br>
+      Contact: <a href="mailto:offthemain@proton.me" style="color:var(--primary-color); font-weight:600; text-decoration:none;">offthemain@proton.me</a>
     </div>
     
     <div class="footer-links">
       <a href="#" onclick="openModal('privacy'); return false;">Privacy Policy</a>
-      <a href="#" onclick="openModal('terms'); return false;">Terms of Service</a>
+      <a href="#" onclick="openModal('terms'); return false;">Terms</a>
+      <a href="#" onclick="openModal('support'); return false;">Support</a>
     </div>
 
-    <a href="https://buymeacoffee.com/djawjdaks8g" target="_blank" class="bmc-btn">
+    <a href="https://buymeacoffee.com/djawjdaks8g" target="_blank" rel="noopener" class="bmc-btn">
       <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee">
       <span>Buy me a coffee</span>
     </a>
   </div>
 </footer>
 
-<!-- Modals -->
+<!-- ================= MODALS ================= -->
+
+<!-- 1. Privacy Policy -->
 <div id="privacyModal" class="modal">
   <div class="modal-content">
     <span class="close-modal" onclick="closeModal('privacy')">&times;</span>
-    <h2>Privacy Policy</h2>
-    <p>We respect your privacy. This website is a client-side calculator. We do not collect, store, or transmit any personal data, appliance usage, or IP addresses to our servers. All calculations are performed instantly within your web browser.</p>
+    <h2 id="modalPrivacyTitle">Privacy Policy</h2>
+    <div id="modalPrivacyContent">
+      <p>We respect your privacy. "Electric Cost" operates entirely as a client-side calculator. This means:</p>
+      <ul>
+        <li>We <strong>do not</strong> collect, store, or transmit your personal data, IP address, or the values you input.</li>
+        <li>All calculations happen instantly within your own web browser.</li>
+        <li>We use third-party advertising networks (like Adsterra) which may use cookies to serve relevant ads. By using this site, you consent to the use of such cookies by our ad partners.</li>
+      </ul>
+    </div>
   </div>
 </div>
+
+<!-- 2. Terms of Service -->
 <div id="termsModal" class="modal">
   <div class="modal-content">
     <span class="close-modal" onclick="closeModal('terms')">&times;</span>
-    <h2>Terms of Use</h2>
-    <p>By using this calculator, you agree that it is provided for informational and educational purposes only. The resulting figures are estimates based on flat-rate multiplication. Actual electricity bills are determined by complex utility provider formulas including base charges, peak-hour surges, and local taxes.</p>
+    <h2 id="modalTermsTitle">Terms of Service</h2>
+    <div id="modalTermsContent">
+      <p>By using the "Electric Cost" calculator, you agree to the following:</p>
+      <ul>
+        <li><strong>Estimates Only:</strong> The figures provided are estimates based on flat-rate multiplication. Actual electricity bills vary greatly depending on local taxes, tiered (progressive) pricing, and base fees.</li>
+        <li><strong>Affiliate Links:</strong> We participate in affiliate programs (e.g., NordVPN, NordPass). If you click on an affiliate link and make a purchase, we may earn a commission at no extra cost to you.</li>
+        <li><strong>No Liability:</strong> We are not responsible for any financial discrepancies between our estimates and your actual utility bill.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 3. Support & Contact (Linktree + BuyMeACoffee) -->
+<div id="supportModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeModal('support')">&times;</span>
+    <h2 id="modalSupportTitle" style="color:var(--primary-color);">Support Us</h2>
+    <div id="modalSupportContent" style="text-align:center;">
+      <p style="font-size:1.05rem; margin-bottom:20px;">If this tool helped you save money on your electric bill, consider supporting the developer!</p>
+      
+      <a href="https://linktr.ee/dedle" target="_blank" rel="noopener" class="btn-outline">🔗 Visit our Linktree</a>
+      <a href="https://buymeacoffee.com/djawjdaks8g" target="_blank" rel="noopener" class="btn-outline" style="background:var(--coffee-color); color:#000; border-color:var(--coffee-color);">☕ Buy me a coffee</a>
+      
+      <p style="margin-top:25px; font-size:0.95rem; color:#666;">
+        Have suggestions or business inquiries?<br>
+        <strong>Email:</strong> <a href="mailto:offthemain@proton.me" style="color:var(--primary-color);">offthemain@proton.me</a>
+      </p>
+
+      <div style="margin-top:20px; text-align:left; padding:15px; background:#f0fdf4; border-radius:8px;">
+        <h4 style="margin:0 0 5px 0; color:#166534;">🎁 Partner Offers</h4>
+        <p style="margin:0; font-size:0.85rem; color:#15803d;">Check out our exclusive affiliate links for <strong><a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=141918&url_id=23180" target="_blank" style="color:#166534;">NordVPN</a></strong> and <strong><a href="https://go.nordpass.io/aff_c?offer_id=488&aff_id=141918&url_id=32566" target="_blank" style="color:#166534;">NordPass</a></strong> to secure your digital life.</p>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-// --- Data & Translations ---
+// --- Translations & Data ---
 const uiTranslations = {
   en: {
     title: "Electricity Cost Calculator",
@@ -256,6 +330,9 @@ const uiTranslations = {
     totalUsage: "Total Monthly Usage", estCost: "Estimated Monthly Bill",
     disclaimer: "* This is an estimate based on average flat rates. Your actual utility bill may differ due to taxes, transmission fees, and progressive (tiered) pricing brackets.",
     quickTitle: "⚡ Quick Add Appliances", quickDesc: "Tap any item to auto-fill the average wattage.",
+    affTitle: "🛡️ Protect Your Digital Life", affDesc: "While saving energy at home, don't forget to secure your data online.",
+    nordVpnDesc: "The best & fastest VPN to secure your internet connection globally.",
+    nordPassDesc: "Securely store, organize, and auto-fill your passwords anywhere.",
     applianceNames: {
       aircon: "Air Conditioner", fridge: "Refrigerator", tv: "TV (LED)", washer: "Washing Machine", 
       microwave: "Microwave", computer: "Desktop PC", monitor: "Monitor", gamingpc: "Gaming PC",
@@ -269,8 +346,11 @@ const uiTranslations = {
     lblAdvanced: "+ W(와트)를 모른다면? (전압/전류 변환)", addBtn: "계산하고 목록에 추가하기",
     listTitle: "내 가전제품 목록", emptyMsg: "위에서 정보를 입력하거나 '빠른 추가'를 탭하세요.",
     totalUsage: "총 월간 예상 사용량", estCost: "월 예상 전기요금",
-    disclaimer: "* 본 계산기는 평균 단가를 곱한 예상치입니다. 실제 고지서 요금은 기본료, 부가가치세, 전력기금 및 누진세 구간 적용에 따라 달라질 수 있습니다.",
+    disclaimer: "* 본 계산기는 평균 단가를 곱한 예상치입니다. 실제 요금은 누진세 및 기본료에 따라 다를 수 있습니다.",
     quickTitle: "⚡ 가전제품 빠른 추가", quickDesc: "항목을 터치하면 평균 소비전력이 자동 입력됩니다.",
+    affTitle: "🛡️ 완벽한 디지털 보안", affDesc: "전기요금을 아끼는 것처럼, 온라인 데이터 보안도 확실하게 챙기세요.",
+    nordVpnDesc: "전 세계 어디서든 빠르고 안전하게 인터넷을 보호하는 최고의 VPN.",
+    nordPassDesc: "비밀번호를 안전하게 저장하고 어디서나 자동으로 채워주는 패스워드 매니저.",
     applianceNames: {
       aircon: "에어컨 (스탠드)", fridge: "냉장고", tv: "TV (대형)", washer: "드럼 세탁기", 
       microwave: "전자레인지", computer: "데스크탑 PC", monitor: "모니터", gamingpc: "고사양 게이밍 PC",
@@ -280,90 +360,67 @@ const uiTranslations = {
   }
 };
 
-// 🌟 Massive SEO Article Content (This solves "Low Value Content") 🌟
 const seoArticles = {
   en: `
     <h2>The Ultimate Guide to Calculating & Reducing Your Electricity Bill</h2>
-    <p>Welcome to <strong>ElecCalc Pro</strong>. In an era where global energy costs are constantly rising, understanding exactly which appliances are draining your wallet is the first crucial step toward financial efficiency. This comprehensive guide will explain how electricity is billed, what progressive pricing is, and practical strategies to significantly lower your monthly expenses.</p>
+    <p>Welcome to <strong>Electric Cost</strong>. In an era where global energy costs are constantly rising, understanding exactly which appliances are draining your wallet is the first crucial step toward financial efficiency. This comprehensive guide will explain how electricity is billed, what progressive pricing is, and practical strategies to significantly lower your monthly expenses.</p>
     
     <h3>💡 How Electricity Billed: The kWh Explained</h3>
     <p>Electricity is universally measured in <strong>Kilowatt-hours (kWh)</strong>. One kilowatt-hour is equivalent to consuming 1,000 watts of power for one straight hour. For example, if you leave a 100-watt light bulb on for 10 hours, you have consumed exactly 1 kWh.</p>
     <p>To calculate the cost manually, the formula is simple: <br>
     <strong>(Appliance Wattage × Hours Used Per Day × 30 Days) ÷ 1,000 = Monthly kWh</strong>. <br>
-    You then multiply this Monthly kWh by your utility provider's rate to get the estimated cost. Our calculator above automates this entirely for multiple appliances at once.</p>
+    You then multiply this Monthly kWh by your utility provider's rate to get the estimated cost. Our calculator above automates this entirely.</p>
 
     <h3>📊 Beware of Tiered (Progressive) Pricing</h3>
-    <p>Most utility companies around the world, including those in the US, South Korea, and Europe, use a system called <strong>Tiered Pricing or Progressive Billing</strong>. This means the price you pay per kWh is not static; it increases as you consume more electricity.</p>
+    <p>Most utility companies around the world use a system called <strong>Tiered Pricing or Progressive Billing</strong>. This means the price you pay per kWh increases as you consume more electricity.</p>
     <ul>
-      <li><strong>Base Tier (e.g., 0 - 200 kWh):</strong> Billed at the lowest rate, subsidized to ensure basic living standards.</li>
-      <li><strong>Middle Tier (e.g., 201 - 400 kWh):</strong> The rate increases moderately.</li>
-      <li><strong>Penalty Tier (e.g., 401+ kWh):</strong> The rate can double or triple. This is why running an air conditioner excessively during summer can cause your bill to skyrocket exponentially, not just linearly.</li>
+      <li><strong>Base Tier:</strong> Billed at the lowest rate, subsidized to ensure basic living standards.</li>
+      <li><strong>Middle Tier:</strong> The rate increases moderately for average consumption.</li>
+      <li><strong>Penalty Tier:</strong> The rate can double or triple. This is why running an air conditioner excessively during summer can cause your bill to skyrocket exponentially.</li>
     </ul>
 
     <h3>🔋 Top 5 Strategies to Slashing Your Energy Bill</h3>
-    <p>While tracking your usage is great, taking action is better. Here are five highly effective, proven methods to reduce electricity consumption in your household:</p>
     <ul>
-      <li><strong>Slay Phantom Power:</strong> Devices in "standby" mode (TVs, consoles, chargers) consume electricity 24/7. This "Vampire Power" can account for 5-10% of your bill. Use smart power strips to completely cut power when appliances aren't in use.</li>
-      <li><strong>Optimize Cooling & Heating:</strong> HVAC systems consume the most energy. Set your AC to 78°F (26°C) in the summer. Every degree below this increases energy consumption by up to 8%.</li>
-      <li><strong>Wash with Cold Water:</strong> Up to 90% of a washing machine's energy is used just to heat the water. Modern detergents are designed to work perfectly in cold water.</li>
-      <li><strong>Air Dry When Possible:</strong> The clothes dryer is a massive energy hog, using up to 3,000 watts. Use a drying rack indoors or outdoors to save a significant amount of money and prolong the life of your clothes.</li>
-      <li><strong>LED Migration:</strong> If you still have incandescent or old halogen bulbs, replace them with LEDs immediately. They use 75% less energy and last decades. The return on investment usually takes less than a year.</li>
+      <li><strong>Slay Phantom Power:</strong> Devices in "standby" mode consume electricity 24/7. Use smart power strips to completely cut power when appliances aren't in use.</li>
+      <li><strong>Optimize Cooling:</strong> Set your AC to 78°F (26°C) in the summer. Every degree below this increases energy consumption by up to 8%.</li>
+      <li><strong>Wash with Cold Water:</strong> Up to 90% of a washing machine's energy is used just to heat the water. Wash with cold water to save instantly.</li>
+      <li><strong>Air Dry:</strong> The clothes dryer is a massive energy hog. Use a drying rack indoors or outdoors to save a significant amount of money.</li>
+      <li><strong>LED Migration:</strong> Replace incandescent bulbs with LEDs. They use 75% less energy and last decades.</li>
     </ul>
-
-    <h3>❓ Frequently Asked Questions (FAQ)</h3>
-    <div class="faq-box">
-      <h4>How accurate is this calculator?</h4>
-      <p>This calculator provides a highly accurate estimate of the <em>raw power usage</em> cost based on the flat rate you input. However, actual utility bills include fixed base connection fees, local taxes, and tiered surcharges which this tool cannot predict.</p>
-    </div>
-    <div class="faq-box">
-      <h4>What if I don't know my appliance's wattage?</h4>
-      <p>Look for a silver or black sticker on the back or bottom of the appliance. If it only lists Voltage (V) and Amps (A), simply multiply them to get Watts (W = V × A). You can use the "Advanced" drop-down in our tool to do this automatically.</p>
-    </div>
   `,
   ko: `
     <h2>전기요금 폭탄 피하는 법: 계산 원리와 절약 가이드 총정리</h2>
-    <p><strong>ElecCalc Pro</strong>에 오신 것을 환영합니다. 매년 오르는 전기요금 때문에 고지서를 받을 때마다 한숨이 나오시나요? 우리 집의 어떤 가전제품이 전기를 가장 많이 잡아먹는지 파악하는 것이 재테크의 첫걸음입니다. 이 가이드에서는 전기요금의 기본 원리, 누진세의 무서움, 그리고 실생활에서 당장 실천할 수 있는 확실한 절약 비법을 자세히 알려드립니다.</p>
+    <p><strong>Electric Cost</strong>에 오신 것을 환영합니다. 매년 오르는 전기요금 때문에 고지서를 받을 때마다 한숨이 나오시나요? 우리 집의 어떤 가전제품이 전기를 가장 많이 잡아먹는지 파악하는 것이 재테크의 첫걸음입니다. 이 가이드에서는 전기요금의 기본 원리, 누진세의 무서움, 그리고 실생활에서 당장 실천할 수 있는 확실한 절약 비법을 자세히 알려드립니다.</p>
     
     <h3>💡 전기요금 계산의 기초: kWh(킬로와트시) 이해하기</h3>
-    <p>전기요금은 <strong>kWh(킬로와트시)</strong>라는 단위를 기준으로 청구됩니다. 1kWh는 1,000W(와트)의 전력을 소비하는 기구를 1시간 동안 켰을 때 발생하는 전력량입니다. 예를 들어 100W 전구를 10시간 켜두면 정확히 1kWh를 소비한 것입니다.</p>
+    <p>전기요금은 <strong>kWh(킬로와트시)</strong>라는 단위를 기준으로 청구됩니다. 1kWh는 1,000W(와트)의 전력을 소비하는 기구를 1시간 동안 켰을 때 발생하는 전력량입니다.</p>
     <p>수동으로 계산하는 공식은 다음과 같습니다: <br>
     <strong>(소비전력W × 하루 사용시간 × 30일) ÷ 1,000 = 월간 사용량(kWh)</strong>. <br>
     여기에 1kWh당 단가를 곱하면 예상 요금이 나옵니다. 상단의 계산기를 이용하면 귀찮은 계산을 단 1초 만에 끝낼 수 있습니다.</p>
 
     <h3>📊 전기요금 폭탄의 주범: '누진세' 완벽 해부</h3>
-    <p>한국을 비롯한 많은 국가는 전기 과소비를 막기 위해 <strong>누진세(누진 요금제)</strong>를 채택하고 있습니다. 즉, 전기를 많이 쓸수록 1kWh당 붙는 요금 단가 자체가 비싸지는 구조입니다. (한국 주택용 전력 기준)</p>
+    <p>한국을 비롯한 많은 국가는 전기 과소비를 막기 위해 <strong>누진세(누진 요금제)</strong>를 채택하고 있습니다. 전기를 많이 쓸수록 1kWh당 붙는 요금 단가 자체가 비싸지는 구조입니다.</p>
     <ul>
-      <li><strong>1단계 (보통 200kWh 이하):</strong> 필수 생활 전력으로 간주되어 단가가 매우 저렴합니다.</li>
-      <li><strong>2단계 (201 ~ 400kWh):</strong> 단가가 1단계에 비해 크게 오릅니다. 대부분의 일반 가정이 속하는 구간입니다.</li>
-      <li><strong>3단계 (400kWh 초과):</strong> 1단계 단가 대비 거의 3배 가까이 비싸집니다. 여름철 에어컨을 무심코 틀었다가 요금 폭탄을 맞는 이유가 바로 이 3단계 구간에 진입했기 때문입니다.</li>
+      <li><strong>1단계:</strong> 필수 생활 전력으로 간주되어 단가가 매우 저렴합니다.</li>
+      <li><strong>2단계:</strong> 단가가 1단계에 비해 크게 오릅니다. 대부분의 일반 가정이 속하는 구간입니다.</li>
+      <li><strong>3단계:</strong> 1단계 단가 대비 거의 3배 가까이 비싸집니다. 에어컨을 무심코 틀었다가 요금 폭탄을 맞는 이유입니다.</li>
     </ul>
 
     <h3>🔋 당장 실천 가능한 확실한 전기 절약 비법 5가지</h3>
-    <p>계산기로 우리 집 전력 소비량을 파악하셨다면, 이제 줄일 차례입니다. 다음 5가지만 실천해도 월 요금을 20% 이상 줄일 수 있습니다.</p>
     <ul>
-      <li><strong>대기전력(흡혈 전력) 차단:</strong> 전원을 끈 상태에서도 플러그가 꽂혀있으면 전기가 샙니다. 셋톱박스, 컴퓨터, 충전기 등이 대표적입니다. 개별 스위치가 달린 멀티탭을 사용하여 사용하지 않을 때 전원을 원천 차단하면 전체 요금의 10%를 아낄 수 있습니다.</li>
-      <li><strong>에어컨은 26도, 선풍기와 짝꿍으로:</strong> 여름철 에어컨 희망온도를 1도 낮출 때마다 전력 소모가 7%가량 급증합니다. 26도로 설정하고 서큘레이터나 선풍기를 함께 돌리면 차가운 공기가 순환되어 훨씬 시원하고 효율적입니다.</li>
-      <li><strong>세탁기는 '찬물' 코스로:</strong> 세탁기가 소비하는 에너지의 무려 90%가 물을 데우는 데 쓰입니다. 요즘 세제는 찬물에서도 때가 잘 빠지도록 설계되어 있으니, 특별한 오염이 아니라면 무조건 찬물로 세탁하세요.</li>
-      <li><strong>전기밥솥 보온 기능 봉인:</strong> 밥솥의 보온 기능은 웬만한 소형 냉장고보다 전기를 많이 먹습니다. 밥을 한 후에는 보관 용기에 담아 즉시 냉동실에 얼려두고, 식사 때마다 전자레인지에 데워 드시는 것이 밥맛도 좋고 전기료도 아끼는 비결입니다.</li>
-      <li><strong>냉장고 공간의 법칙:</strong> 냉장실은 냉기가 잘 순환할 수 있도록 전체 공간의 60%만 채우는 것이 좋습니다. 반대로 냉동실은 얼어있는 음식물들이 서로 냉기를 보존해주므로 꽉꽉 채울수록 전력 효율이 좋아집니다.</li>
+      <li><strong>대기전력 차단:</strong> 셋톱박스, 컴퓨터, 충전기 등은 플러그만 꽂혀있어도 전기가 샙니다. 스위치 멀티탭으로 차단하세요.</li>
+      <li><strong>에어컨은 26도, 선풍기와 함께:</strong> 희망온도를 1도 낮출 때마다 전력 소모가 7% 급증합니다. 26도 설정 후 선풍기를 같이 트세요.</li>
+      <li><strong>세탁기는 '찬물' 코스로:</strong> 세탁기 에너지의 90%가 물을 데우는 데 쓰입니다. 찬물 세탁만으로도 요금이 뚝 떨어집니다.</li>
+      <li><strong>전기밥솥 보온 기능 봉인:</strong> 보온 기능은 전기를 엄청나게 먹습니다. 밥은 즉시 냉동실에 얼려두고 전자레인지에 데워 드세요.</li>
+      <li><strong>LED 조명 교체:</strong> 백열등이나 형광등을 LED로 교체하면 전력 소비를 최대 80%까지 줄일 수 있습니다.</li>
     </ul>
-
-    <h3>❓ 자주 묻는 질문 (FAQ)</h3>
-    <div class="faq-box">
-      <h4>이 계산기 결과가 실제 고지서와 100% 똑같나요?</h4>
-      <p>아닙니다. 본 계산기는 입력하신 단가를 바탕으로 한 '순수 전력 사용 요금'의 예상치입니다. 실제 한국전력 고지서에는 기본요금, 부가가치세(10%), 전력산업기반기금(3.7%)이 추가되며, 여름/겨울철 계절별 요금과 누진세가 적용되므로 실제 청구액은 더 높게 나올 수 있습니다.</p>
-    </div>
-    <div class="faq-box">
-      <h4>소비전력(W)을 모를 때는 어떻게 하나요?</h4>
-      <p>가전제품 뒷면이나 밑면을 보면 은색 스티커(제원표)가 붙어있습니다. 거기에 '정격소비전력 1500W' 등으로 적혀있습니다. 만약 W 대신 전압(V)과 전류(A)만 적혀있다면 상단의 'W를 모른다면?' 탭을 열어 두 숫자를 입력하세요. (예: 220V x 2A = 440W) 자동으로 계산해 드립니다.</p>
-    </div>
   `
 };
 
 const countryConfig = {
   US: { lang:'en', currency:'USD', symbol:'$', rate:0.16, volt:120, name: "USA (Avg) 🇺🇸" },
   KR: { lang:'ko', currency:'KRW', symbol:'₩', rate:250, volt:220, name: "South Korea 🇰🇷" },
-  JP: { lang:'ja', currency:'JPY', symbol:'¥', rate:31, volt:100, name: "Japan 🇯🇵" },
+  JP: { lang:'en', currency:'JPY', symbol:'¥', rate:31, volt:100, name: "Japan 🇯🇵" },
   EU: { lang:'en', currency:'EUR', symbol:'€', rate:0.28, volt:230, name: "Europe (Avg) 🇪🇺" },
   OTHER: { lang:'en', currency:'USD', symbol:'$', rate:0.15, volt:220, name: "Global Custom 🌍" }
 };
@@ -389,26 +446,23 @@ function init() {
   
   el('countrySelect').onchange = e => setCountry(e.target.value);
   el('languageSelect').onchange = e => setLang(e.target.value);
-  el('addBtn').onclick = addItem;
-  
-  ['customVoltage','customCurrent'].forEach(id => {
+  el('addBtn').onclick = addItem;['customVoltage','customCurrent'].forEach(id => {
     el(id).addEventListener('input', () => {
       const v = el('customVoltage').value, a = el('customCurrent').value;
       if(v && a) el('customPower').value = (v*a).toFixed(0);
     });
   });
 
-  setCountry('US'); // Initialize with USA
+  setCountry('US'); // Global Default
 }
 
 function setCountry(code) {
   const conf = countryConfig[code];
   state.currency = conf.currency;
   
-  // Set language dropdown automatically but allow manual override later
-  el('languageSelect').value = conf.lang === 'ja' ? 'en' : conf.lang; 
-  // Fallback Japanese to English UI for now as we only have En/Ko detailed SEO text
+  // Enforce English default for global, allow KO only if selected
   const targetLang = conf.lang === 'ko' ? 'ko' : 'en';
+  el('languageSelect').value = targetLang; 
 
   el('customRate').value = conf.rate;
   el('customVoltage').value = conf.volt;
@@ -425,6 +479,7 @@ function setLang(lang) {
   state.lang = lang;
   const t = uiTranslations[lang] || uiTranslations['en'];
   
+  // Update texts
   el('calcTitle').textContent = t.title;
   el('lbl_name').textContent = t.lblName;
   el('lbl_power').textContent = t.lblPower;
@@ -440,7 +495,24 @@ function setLang(lang) {
   el('quickTitle').textContent = t.quickTitle;
   el('quickDesc').textContent = t.quickDesc;
   
-  // Inject SEO Article Content
+  // Affiliate Box
+  el('affTitle').textContent = t.affTitle;
+  el('affDesc').textContent = t.affDesc;
+  el('nordVpnDesc').textContent = t.nordVpnDesc;
+  el('nordPassDesc').textContent = t.nordPassDesc;
+
+  // Modals (Basic translation handling for titles if needed, kept simple)
+  if(lang === 'ko') {
+    el('modalPrivacyTitle').textContent = "개인정보처리방침";
+    el('modalTermsTitle').textContent = "이용약관";
+    el('modalSupportTitle').textContent = "후원 및 고객지원";
+  } else {
+    el('modalPrivacyTitle').textContent = "Privacy Policy";
+    el('modalTermsTitle').textContent = "Terms of Service";
+    el('modalSupportTitle').textContent = "Support Us";
+  }
+
+  // SEO Article
   el('seoContent').innerHTML = seoArticles[lang] || seoArticles['en'];
 
   renderQuickList();
@@ -459,7 +531,6 @@ function renderQuickList() {
       el('customName').value = t.applianceNames[app.key]||app.key;
       el('customPower').value = app.w;
       el('customHours').focus();
-      // Visual feedback
       li.style.backgroundColor = '#e0f2fe';
       setTimeout(()=> li.style.backgroundColor = '', 200);
     };
@@ -522,11 +593,19 @@ function calculate() {
   el('val_totalCost').textContent = new Intl.NumberFormat(state.lang==='ko'?'ko-KR':'en-US', { style:'currency', currency: state.currency }).format(totalCost);
 }
 
+// Modals
 window.openModal = t => document.getElementById(t+'Modal').style.display='block';
 window.closeModal = t => document.getElementById(t+'Modal').style.display='none';
 window.onclick = e => { if(e.target.classList.contains('modal')) e.target.style.display="none"; }
 
 init();
 </script>
+
+<!-- 📢 Adsterra Popunder Ad -->
+<script src="https://pl28997155.profitablecpmratenetwork.com/e6/a4/67/e6a4679c586f1f8bbef785e405451998.js"></script>
+
+<!-- 📢 Adsterra Social Bar Ad -->
+<script src="https://pl28997157.profitablecpmratenetwork.com/eb/db/57/ebdb570e997ec921dceb3014083c94e6.js"></script>
+
 </body>
 </html>
